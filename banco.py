@@ -119,14 +119,14 @@ def create_produto():
         query = """
         MATCH (v:Vendedor {cpf:$cpf_vendedor})
 
-        CREATE (p:Produto {
-            id: $id_produto,
-            nome: $nome,
-            descricao: $descricao,
-            preco: $preco
-        })
+        MERGE (p:Produto {id: $id_produto})
 
-        CREATE (v)-[:VENDE]->(p)
+        SET
+            p.nome = $nome,
+            p.descricao = $descricao,
+            p.preco = $preco
+
+        MERGE (v)-[:VENDE]->(p)
         """
 
         session.run(
